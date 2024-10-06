@@ -70,7 +70,7 @@ class Scene(
 
     var amtSelected = 0
     @Suppress("UNUSED_PARAMETER")
-    fun update(keysPressed: Set<String>, selection: Pair<Vec2, Vec2>?) {
+    fun update(keysPressed: Set<String>, selection: Pair<Vec2, Vec2>?, panDisplacement: Vec2?) {
         val timeAtThisFrame = Date().getTime()
         val dt = (timeAtThisFrame - timeAtLastFrame).toFloat() / 1000.0f
         val t = (timeAtThisFrame - timeAtFirstFrame).toFloat() / 1000.0f
@@ -84,17 +84,17 @@ class Scene(
             camera.position.x  +=  1.0f * dt
         }
 
+        panDisplacement?.let { displacement ->
+            camera.position += displacement
+        }
+
         camera.setAspectRatio(gl.canvas.width.toFloat() / gl.canvas.height)
         camera.updateViewProjMatrix()
 
-        var firstSelected: GameObject? = null
         selection?.let { rect ->
             amtSelected = 0
             gameObjects.forEach {
                 it.selected = if (rect.encapsulates(it.position.xy)) {
-                    if (amtSelected == 0) {
-                        firstSelected = it
-                    }
                     ++amtSelected
                 } else 0
             }
