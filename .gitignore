@@ -5,3 +5,5 @@ web/
 *.sublime-workspace
 Thumbs.db
 *.zip
+
+.idea
