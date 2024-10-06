@@ -23,6 +23,7 @@ class App(val canvas : HTMLCanvasElement, val overlay : HTMLDivElement) {
     scene.resize(canvas)
   }
 
+  // todo: remove drag start and just set selection
   var dragStart: Vec2? = null
   var selection: Pair<Vec2, Vec2>? = null
 
@@ -41,7 +42,7 @@ class App(val canvas : HTMLCanvasElement, val overlay : HTMLDivElement) {
     canvas.onmousedown = ::onClickStart
 
     canvas.onmousemove = { 
-      event : Event ->
+      event : MouseEvent ->
       event.stopPropagation()
     }
 

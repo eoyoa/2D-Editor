@@ -4,6 +4,7 @@ import org.khronos.webgl.WebGLRenderingContext as GL //# GL# we need this for th
 import kotlin.js.Date
 import vision.gears.webglmath.Vec3
 import vision.gears.webglmath.Vec4
+import kotlin.math.atan2
 import kotlin.math.ceil
 import kotlin.math.sqrt
 import kotlin.random.Random
@@ -87,10 +88,14 @@ class Scene(
         camera.setAspectRatio(gl.canvas.width.toFloat() / gl.canvas.height)
         camera.updateViewProjMatrix()
 
+        var firstSelected: GameObject? = null
         selection?.let { rect ->
             amtSelected = 0
             gameObjects.forEach {
                 it.selected = if (rect.encapsulates(it.position.xy)) {
+                    if (amtSelected == 0) {
+                        firstSelected = it
+                    }
                     ++amtSelected
                 } else 0
             }
@@ -107,8 +112,14 @@ class Scene(
                         )
                         it.position.set(gridPos + camera.position)
                     }
-                    "M" in keysPressed -> {
-                        it.roll = 0.5f
+                    "A" in keysPressed -> {
+                        it.roll += 1f * dt
+                    }
+                    "D" in keysPressed -> {
+                        it.roll -= 1f * dt
+                    }
+                    "DELETE" in keysPressed -> {
+                        gameObjects.remove(it)
                     }
                 }
             }
