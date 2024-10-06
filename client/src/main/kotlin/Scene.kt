@@ -1,13 +1,12 @@
 import org.w3c.dom.HTMLCanvasElement
 import vision.gears.webglmath.Vec2
-import org.khronos.webgl.WebGLRenderingContext as GL //# GL# we need this for the constants declared ˙HUN˙ a constansok miatt kell
-import kotlin.js.Date
 import vision.gears.webglmath.Vec3
 import vision.gears.webglmath.Vec4
-import kotlin.math.atan2
+import kotlin.js.Date
 import kotlin.math.ceil
 import kotlin.math.sqrt
 import kotlin.random.Random
+import org.khronos.webgl.WebGLRenderingContext as GL
 
 class Scene(
     val gl: WebGL2RenderingContext

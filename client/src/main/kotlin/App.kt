@@ -1,9 +1,10 @@
 import kotlinx.browser.document
 import kotlinx.browser.window
-import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLCanvasElement
-import org.w3c.dom.events.*
-import org.w3c.dom.Window
+import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.events.Event
+import org.w3c.dom.events.KeyboardEvent
+import org.w3c.dom.events.MouseEvent
 import vision.gears.webglmath.Vec2
 
 class App(val canvas : HTMLCanvasElement, val overlay : HTMLDivElement) {
