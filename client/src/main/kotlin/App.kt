@@ -66,7 +66,7 @@ class App(val canvas : HTMLCanvasElement, val overlay : HTMLDivElement) {
     dragStart?.let { startPos ->
       when {
         "SPACE" in keysPressed -> {
-            panDisplacement = event.toClipSpaceVec2() - startPos
+            panDisplacement = startPos - event.toClipSpaceVec2()
         }
           "SHIFT" in keysPressed -> {
             selection = Pair(startPos, event.toClipSpaceVec2())
@@ -86,6 +86,7 @@ class App(val canvas : HTMLCanvasElement, val overlay : HTMLDivElement) {
   fun update() {
     scene.update(keysPressed, selection, panDisplacement)
     if (selection != null) { selection = null }
+    if (panDisplacement != null) { panDisplacement = null }
     window.requestAnimationFrame { update() }
   }
 }
