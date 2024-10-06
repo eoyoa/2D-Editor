@@ -3,7 +3,7 @@ import vision.gears.webglmath.Vec2
 import org.khronos.webgl.WebGLRenderingContext as GL //# GL# we need this for the constants declared ˙HUN˙ a constansok miatt kell
 import kotlin.js.Date
 import vision.gears.webglmath.Vec3
-import kotlin.math.atan2
+import vision.gears.webglmath.Vec4
 import kotlin.math.ceil
 import kotlin.math.sqrt
 import kotlin.random.Random
@@ -80,12 +80,17 @@ class Scene(
         gl.clearDepth(1.0f)//## will be useful in 3D ˙HUN˙ 3D-ben lesz hasznos
         gl.clear(GL.COLOR_BUFFER_BIT or GL.DEPTH_BUFFER_BIT)//#or# bitwise OR of flags
 
+        if("RIGHT" in keysPressed){
+            camera.position.x  +=  1.0f * dt
+        }
+
+        camera.setAspectRatio(gl.canvas.width.toFloat() / gl.canvas.height)
+        camera.updateViewProjMatrix()
+
         selection?.let { rect ->
             amtSelected = 0
-//            console.log("SELECTED: (${rect.first.x}, ${rect.first.y}), (${rect.second.x}, ${rect.second.y})")
             gameObjects.forEach {
                 it.selected = if (rect.encapsulates(it.position.xy)) {
-//                    console.log("SELECTED at ${it.position.x}, ${it.position.y}")
                     ++amtSelected
                 } else 0
             }
@@ -96,12 +101,11 @@ class Scene(
                 when {
                     "G" in keysPressed -> {
                         val gridN = ceil(sqrt(amtSelected.toDouble())).toInt()
-                        it.position.set(
+                        val gridPos = Vec2(
                             (((it.selected - 1) % gridN).toFloat() / (gridN - 1)) - 0.5f,
-                            (((it.selected - 1) / gridN).toFloat() / (gridN - 1)) - 0.5f,
-                            0.5f
+                            (((it.selected - 1) / gridN).toFloat() / (gridN - 1)) - 0.5f
                         )
-                        it.scale.set(0.1f, 0.1f, 1f)
+                        it.position.set(gridPos + camera.position)
                     }
                     "M" in keysPressed -> {
                         it.roll = 0.5f
@@ -111,14 +115,16 @@ class Scene(
             it.update()
         }
 
-        camera.setAspectRatio(gl.canvas.width.toFloat() / gl.canvas.height)
-        camera.updateViewProjMatrix()
-
         gameObjects.forEach {
             if (it.selected > 0) {
                 it.using(solidMaterialRed).draw(camera)
             } else it.draw(camera)
         }
+    }
+
+    fun clickInScene(canvas : HTMLCanvasElement, screenX: Float, screenY: Float): Vec4 {
+        val ndc = Vec4(screenX * 2.0f / canvas.width.toFloat() - 1.0f, 1.0f - screenY * 2.0f / canvas.height.toFloat(), 0.0f, 1.0f)
+        return camera.viewProjMatrix.invert() * ndc
     }
 
     private fun Pair<Vec2, Vec2>.encapsulates(position: Vec2): Boolean {

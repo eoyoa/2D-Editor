@@ -59,21 +59,25 @@ class App(val canvas : HTMLCanvasElement, val overlay : HTMLDivElement) {
 
   fun onClickStart (event : MouseEvent)
   {
-    console.log("STARTED MOUSE DRAG")
-    dragStart = event.toClipSpaceVec2()
+    when {
+      "SHIFT" in keysPressed -> {
+        dragStart = event.toClipSpaceVec2()
+      }
+    }
   }
 
   fun onClickEnd (event : MouseEvent) {
-    dragStart?.let { startPos ->
-      console.log("RELEASED MOUSE DRAG")
-      selection = Pair(startPos, event.toClipSpaceVec2())
+    when {
+      "SHIFT" in keysPressed -> {
+        dragStart?.let { startPos ->
+          selection = Pair(startPos, event.toClipSpaceVec2())
+        }
+      }
     }
   }
 
   fun MouseEvent.toClipSpaceVec2(): Vec2 {
-    val x = (this.x.toFloat() / canvas.width) * 2 - 1
-    val y = 1 - ((this.y.toFloat() / canvas.height) * 2)
-    return Vec2(x, y)
+    return scene.clickInScene(canvas, this.x.toFloat(), this.y.toFloat()).xy
   }
 
   fun update() {
